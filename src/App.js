@@ -693,10 +693,10 @@ function App() {
           <aside className="border-b border-slate-800/80 bg-panel/90 lg:w-80 lg:border-b-0 lg:border-r">
             <div className="border-b border-slate-800/80 px-5 py-5">
               <p className="text-xs uppercase tracking-[0.32em] text-emerald-400">
-                The Developer Console
+                Nabil.sys
               </p>
               <h1 className="mt-3 text-2xl font-semibold text-white">
-                Portfolio IDE
+                Creative Build Terminal
               </h1>
               <p className="mt-2 max-w-sm text-sm leading-6 text-slate-400">
                 Browse sections like source files, open multiple tabs, and jump
