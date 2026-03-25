@@ -5,6 +5,22 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --surface: 13 17 23;
+    --panel: 22 27 34;
+    --chrome: 31 41 55;
+    --panel-soft: 17 24 39;
+    --accent: 52 211 153;
+    --accent-alt: 56 189 248;
+    --syntax-string: 52 211 153;
+    --syntax-function: 56 189 248;
+    --syntax-keyword: 192 132 252;
+    --syntax-property: 250 204 21;
+    --syntax-comment: 148 163 184;
+    --syntax-operator: 244 114 182;
+    --syntax-number: 251 146 60;
+  }
+
   html {
     color-scheme: dark;
   }
@@ -12,8 +28,8 @@
   body {
     @apply bg-surface font-mono text-slate-100 antialiased;
     background-image:
-      radial-gradient(circle at top left, rgba(56, 189, 248, 0.12), transparent 24%),
-      radial-gradient(circle at bottom right, rgba(52, 211, 153, 0.1), transparent 24%),
+      radial-gradient(circle at top left, rgb(var(--accent-alt) / 0.12), transparent 24%),
+      radial-gradient(circle at bottom right, rgb(var(--accent) / 0.1), transparent 24%),
       linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
       linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
     background-position: center;
@@ -21,7 +37,8 @@
   }
 
   ::selection {
-    @apply bg-sky-400/30 text-white;
+    background-color: rgb(var(--accent-alt) / 0.3);
+    color: white;
   }
 }
 
@@ -31,11 +48,11 @@
   }
 
   .editor-tab {
-    @apply flex items-center gap-2 border-r border-slate-800/80 px-4 py-3 text-sm text-slate-400 transition hover:bg-slate-900/60 hover:text-slate-100;
+    @apply flex items-center gap-2 border-r border-slate-800/80 px-4 py-3 text-sm text-slate-400 transition hover:bg-panel-soft/60 hover:text-slate-100;
   }
 
   .editor-tab-active {
-    @apply bg-slate-950/80 text-slate-50;
+    @apply bg-panel-soft/90 text-slate-50;
   }
 
   .glass-panel {

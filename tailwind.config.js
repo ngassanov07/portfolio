@@ -4,18 +4,20 @@ export default {
   theme: {
     extend: {
       colors: {
-        surface: "#0d1117",
-        panel: "#161b22",
-        chrome: "#1f2937",
-        "panel-soft": "#111827",
+        surface: "rgb(var(--surface) / <alpha-value>)",
+        panel: "rgb(var(--panel) / <alpha-value>)",
+        chrome: "rgb(var(--chrome) / <alpha-value>)",
+        "panel-soft": "rgb(var(--panel-soft) / <alpha-value>)",
+        accent: "rgb(var(--accent) / <alpha-value>)",
+        "accent-alt": "rgb(var(--accent-alt) / <alpha-value>)",
         syntax: {
-          string: "#34d399",
-          function: "#38bdf8",
-          keyword: "#c084fc",
-          property: "#facc15",
-          comment: "#94a3b8",
-          operator: "#f472b6",
-          number: "#fb923c",
+          string: "rgb(var(--syntax-string) / <alpha-value>)",
+          function: "rgb(var(--syntax-function) / <alpha-value>)",
+          keyword: "rgb(var(--syntax-keyword) / <alpha-value>)",
+          property: "rgb(var(--syntax-property) / <alpha-value>)",
+          comment: "rgb(var(--syntax-comment) / <alpha-value>)",
+          operator: "rgb(var(--syntax-operator) / <alpha-value>)",
+          number: "rgb(var(--syntax-number) / <alpha-value>)",
         },
       },
       fontFamily: {

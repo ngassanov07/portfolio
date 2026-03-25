@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import {
+  Check,
   ChevronDown,
   ChevronRight,
   Command,
@@ -8,6 +9,7 @@ import {
   Folder,
   FolderOpen,
   GitBranch,
+  Palette,
   Search,
   TerminalSquare,
   X,
@@ -134,6 +136,93 @@ const initialLogs = [
 const introLine =
   "I build creative, fast and efficient web solutions with AI tools.";
 
+const paletteOptions = [
+  {
+    id: "github-dark",
+    name: "GitHub Dark",
+    note: "Balanced emerald and sky highlights.",
+    swatches: ["#34d399", "#38bdf8", "#c084fc"],
+    vars: {
+      "--surface": "13 17 23",
+      "--panel": "22 27 34",
+      "--chrome": "31 41 55",
+      "--panel-soft": "17 24 39",
+      "--accent": "52 211 153",
+      "--accent-alt": "56 189 248",
+      "--syntax-string": "52 211 153",
+      "--syntax-function": "56 189 248",
+      "--syntax-keyword": "192 132 252",
+      "--syntax-property": "250 204 21",
+      "--syntax-comment": "148 163 184",
+      "--syntax-operator": "244 114 182",
+      "--syntax-number": "251 146 60",
+    },
+  },
+  {
+    id: "tokyo-night",
+    name: "Tokyo Night",
+    note: "Cool midnight blues with violet syntax.",
+    swatches: ["#7dcfff", "#bb9af7", "#9ece6a"],
+    vars: {
+      "--surface": "26 27 38",
+      "--panel": "36 40 59",
+      "--chrome": "65 72 104",
+      "--panel-soft": "30 33 49",
+      "--accent": "125 207 255",
+      "--accent-alt": "187 154 247",
+      "--syntax-string": "158 206 106",
+      "--syntax-function": "122 162 247",
+      "--syntax-keyword": "187 154 247",
+      "--syntax-property": "224 175 104",
+      "--syntax-comment": "134 149 208",
+      "--syntax-operator": "247 118 142",
+      "--syntax-number": "255 158 100",
+    },
+  },
+  {
+    id: "sunset-circuit",
+    name: "Sunset Circuit",
+    note: "Warm amber and rose for a louder console.",
+    swatches: ["#fb923c", "#f472b6", "#facc15"],
+    vars: {
+      "--surface": "24 16 26",
+      "--panel": "41 24 39",
+      "--chrome": "71 35 64",
+      "--panel-soft": "31 18 31",
+      "--accent": "251 146 60",
+      "--accent-alt": "244 114 182",
+      "--syntax-string": "251 191 36",
+      "--syntax-function": "251 146 60",
+      "--syntax-keyword": "244 114 182",
+      "--syntax-property": "253 224 71",
+      "--syntax-comment": "196 181 253",
+      "--syntax-operator": "248 113 113",
+      "--syntax-number": "251 191 36",
+    },
+  },
+  {
+    id: "matrix-ops",
+    name: "Matrix Ops",
+    note: "Green-on-black with readable cyan accents.",
+    swatches: ["#4ade80", "#2dd4bf", "#22c55e"],
+    vars: {
+      "--surface": "6 17 10",
+      "--panel": "11 31 20",
+      "--chrome": "22 55 41",
+      "--panel-soft": "9 23 15",
+      "--accent": "74 222 128",
+      "--accent-alt": "45 212 191",
+      "--syntax-string": "74 222 128",
+      "--syntax-function": "45 212 191",
+      "--syntax-keyword": "34 197 94",
+      "--syntax-property": "132 204 22",
+      "--syntax-comment": "134 239 172",
+      "--syntax-operator": "16 185 129",
+      "--syntax-number": "74 222 128",
+    },
+  },
+];
+
 function createLog(message) {
   return {
     id: Date.now() + Math.random(),
@@ -144,6 +233,59 @@ function createLog(message) {
     }),
     message,
   };
+}
+
+function PalettePicker({ palettes, activePaletteId, onSelect }) {
+  return (
+    <div className="glass-panel px-3 py-4">
+      <div className="mb-3 flex items-center justify-between px-2 text-xs uppercase tracking-[0.28em] text-slate-500">
+        <span className="flex items-center gap-2">
+          <Palette className="h-4 w-4 text-accent" />
+          Palette
+        </span>
+        <span>Live</span>
+      </div>
+      <div className="grid gap-2">
+        {palettes.map((palette) => {
+          const isActive = palette.id === activePaletteId;
+
+          return (
+            <button
+              key={palette.id}
+              type="button"
+              onClick={() => onSelect(palette.id)}
+              className={`rounded-xl border px-3 py-3 text-left transition ${
+                isActive
+                  ? "border-accent-alt/60 bg-panel-soft/80"
+                  : "border-slate-800/80 bg-panel-soft/40 hover:border-accent/40 hover:bg-panel-soft/70"
+              }`}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-sm font-medium text-slate-100">{palette.name}</p>
+                  <p className="mt-1 text-xs leading-5 text-slate-500">{palette.note}</p>
+                </div>
+                {isActive ? (
+                  <span className="rounded-full border border-accent/40 bg-accent/10 p-1 text-accent">
+                    <Check className="h-3 w-3" />
+                  </span>
+                ) : null}
+              </div>
+              <div className="mt-3 flex gap-2">
+                {palette.swatches.map((swatch) => (
+                  <span
+                    key={`${palette.id}-${swatch}`}
+                    className="h-3 w-8 rounded-full border border-white/10"
+                    style={{ backgroundColor: swatch }}
+                  />
+                ))}
+              </div>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
 }
 
 function fileIcon(name) {
@@ -197,9 +339,9 @@ function FileTree({
                   <ChevronRight className="h-4 w-4 text-slate-500" />
                 )}
                 {expanded ? (
-                  <FolderOpen className="h-4 w-4 text-sky-400" />
+                  <FolderOpen className="h-4 w-4 text-accent-alt" />
                 ) : (
-                  <Folder className="h-4 w-4 text-sky-400" />
+                  <Folder className="h-4 w-4 text-accent-alt" />
                 )}
                 <span>{node.name}</span>
               </button>
@@ -232,7 +374,7 @@ function FileTree({
             style={padding}
           >
             <span className="w-4" />
-            <Icon className="h-4 w-4 text-emerald-400" />
+            <Icon className="h-4 w-4 text-accent" />
             <span className="truncate">{node.name}</span>
           </button>
         );
@@ -243,7 +385,7 @@ function FileTree({
 
 function TerminalWindow({ logs }) {
   return (
-    <div className="fixed inset-x-0 bottom-9 z-30 h-44 border-t border-slate-800/80 bg-[#09111f]/95 backdrop-blur">
+    <div className="fixed inset-x-0 bottom-9 z-30 h-44 border-t border-slate-800/80 bg-panel-soft/95 backdrop-blur">
       <div className="flex h-10 items-center justify-between border-b border-slate-800/80 px-4 text-xs uppercase tracking-[0.28em] text-slate-400">
         <span>Terminal</span>
         <span>{logs.length} entries</span>
@@ -256,7 +398,7 @@ function TerminalWindow({ logs }) {
           >
             <span className="text-slate-500">{log.stamp}</span>
             <span className="break-words">
-              <span className="mr-2 text-emerald-400">$</span>
+              <span className="mr-2 text-accent">$</span>
               {log.message}
             </span>
           </div>
@@ -463,7 +605,7 @@ function HomeFile({ typedText }) {
         <span className="pl-4 text-syntax-property">intro</span>
         <span className="text-slate-300">: </span>
         <span className="text-syntax-string">"{typedText}"</span>
-        <span className="inline-block h-5 w-2 translate-y-1 bg-emerald-400 align-middle animate-caret" />
+        <span className="inline-block h-5 w-2 translate-y-1 bg-accent align-middle animate-caret" />
         <span className="text-slate-300">,</span>
       </CodeLine>
       <CodeLine number={7}>
@@ -555,7 +697,7 @@ function ContactFile() {
         <span className="text-slate-200">whoami</span>
       </CodeLine>
       <CodeLine number={2}>
-        <span className="text-emerald-400">ngassanov07</span>
+        <span className="text-accent">ngassanov07</span>
       </CodeLine>
       <CodeLine number={3}>
         <span className="text-syntax-function">$</span>{" "}
@@ -599,6 +741,18 @@ function App() {
   const [logs, setLogs] = useState(initialLogs);
   const [clock, setClock] = useState(new Date());
   const [typedText, setTypedText] = useState("");
+  const [activePaletteId, setActivePaletteId] = useState(() => {
+    if (typeof window === "undefined") {
+      return paletteOptions[0].id;
+    }
+
+    const storedPalette = window.localStorage.getItem("nabil-sys-palette");
+    return paletteOptions.some((palette) => palette.id === storedPalette)
+      ? storedPalette
+      : paletteOptions[0].id;
+  });
+  const activePalette =
+    paletteOptions.find((palette) => palette.id === activePaletteId) ?? paletteOptions[0];
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -621,6 +775,13 @@ function App() {
   }, [typedText]);
 
   useEffect(() => {
+    Object.entries(activePalette.vars).forEach(([key, value]) => {
+      document.documentElement.style.setProperty(key, value);
+    });
+    window.localStorage.setItem("nabil-sys-palette", activePalette.id);
+  }, [activePalette]);
+
+  useEffect(() => {
     const handleKeyDown = (event) => {
       if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === "k") {
         event.preventDefault();
@@ -639,6 +800,17 @@ function App() {
 
   const appendLog = (message) => {
     setLogs((current) => [...current.slice(-9), createLog(message)]);
+  };
+
+  const handlePaletteChange = (paletteId) => {
+    if (paletteId === activePaletteId) {
+      return;
+    }
+
+    const nextPalette =
+      paletteOptions.find((palette) => palette.id === paletteId) ?? paletteOptions[0];
+    setActivePaletteId(nextPalette.id);
+    appendLog(`Switched palette to ${nextPalette.name}.`);
   };
 
   const openFile = (fileId, source = "explorer") => {
@@ -692,7 +864,7 @@ function App() {
         <div className="flex flex-1 flex-col lg:flex-row">
           <aside className="border-b border-slate-800/80 bg-panel/90 lg:w-80 lg:border-b-0 lg:border-r">
             <div className="border-b border-slate-800/80 px-5 py-5">
-              <p className="text-xs uppercase tracking-[0.32em] text-emerald-400">
+              <p className="text-xs uppercase tracking-[0.32em] text-accent">
                 Nabil.sys
               </p>
               <h1 className="mt-3 text-2xl font-semibold text-white">
@@ -708,7 +880,7 @@ function App() {
               <button
                 type="button"
                 onClick={() => setIsCommandOpen(true)}
-                className="flex w-full items-center justify-between rounded-xl border border-slate-800 bg-slate-950/80 px-4 py-3 text-sm text-slate-400 transition hover:border-sky-400/40 hover:text-slate-100"
+                className="flex w-full items-center justify-between rounded-xl border border-slate-800 bg-panel-soft/80 px-4 py-3 text-sm text-slate-400 transition hover:border-accent-alt/40 hover:text-slate-100"
               >
                 <span className="flex items-center gap-2">
                   <Search className="h-4 w-4" />
@@ -719,6 +891,12 @@ function App() {
                   K
                 </span>
               </button>
+
+              <PalettePicker
+                palettes={paletteOptions}
+                activePaletteId={activePaletteId}
+                onSelect={handlePaletteChange}
+              />
 
               <div className="glass-panel px-3 py-4">
                 <div className="mb-3 flex items-center justify-between px-2 text-xs uppercase tracking-[0.28em] text-slate-500">
@@ -749,7 +927,7 @@ function App() {
                     onClick={() => setActiveTab(fileId)}
                     className={`editor-tab ${activeTab === fileId ? "editor-tab-active" : ""}`}
                   >
-                    <Icon className="h-4 w-4 text-sky-400" />
+                    <Icon className="h-4 w-4 text-accent-alt" />
                     <span>{file.name}</span>
                     {openFiles.length > 1 ? (
                       <span
@@ -779,9 +957,9 @@ function App() {
                       {activeFile.label}
                     </h2>
                   </div>
-                  <div className="rounded-xl border border-slate-800 bg-slate-950/80 px-4 py-3 text-sm text-slate-400">
+                  <div className="rounded-xl border border-slate-800 bg-panel-soft/80 px-4 py-3 text-sm text-slate-400">
                     <span className="text-slate-500">Path:</span>{" "}
-                    <span className="text-sky-400">{activeFile.path}</span>
+                    <span className="text-accent-alt">{activeFile.path}</span>
                   </div>
                 </div>
 
@@ -822,14 +1000,15 @@ function App() {
 
         <TerminalWindow logs={logs} />
 
-        <footer className="fixed inset-x-0 bottom-0 z-40 flex h-9 items-center justify-between border-t border-slate-800/80 bg-slate-950 px-4 text-xs text-slate-300">
+        <footer className="fixed inset-x-0 bottom-0 z-40 flex h-9 items-center justify-between border-t border-slate-800/80 bg-panel-soft px-4 text-xs text-slate-300">
           <div className="flex items-center gap-4">
-            <span className="flex items-center gap-2 text-sky-400">
+            <span className="flex items-center gap-2 text-accent-alt">
               <GitBranch className="h-3.5 w-3.5" />
               main
             </span>
             <span>UTF-8</span>
-            <span>React + Tailwind</span>
+            <span className="hidden sm:inline">Palette: {activePalette.name}</span>
+            <span className="hidden md:inline">React + Tailwind</span>
           </div>
           <span>{clock.toLocaleTimeString([], { hour12: false })}</span>
         </footer>
